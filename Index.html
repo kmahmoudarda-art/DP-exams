@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<!-- saved from url=(0031)https://gwa-dp-exams.pages.dev/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Exam Timer — GEMS World Academy Dubai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./IB Exam Timer — GEMS World Academy Dubai_files/css2" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Inter",Arial,sans-serif;background:#f7f5f0;color:#1a1a1a;height:100vh;overflow:hidden;}
+
+/* ══ SETUP SCREEN ══ */
+#setup{display:flex;flex-direction:column;align-items:center;height:100vh;overflow-y:auto;background:#f7f5f0;}
+.setup-topbar{width:100%;background:#0d1f3c;padding:14px 32px;display:flex;align-items:center;gap:16px;}
+.setup-topbar img{height:48px;mix-blend-mode:screen;}
+.setup-topbar-div{width:1px;height:36px;background:rgba(255,255,255,.2);margin:0 4px;}
+.setup-ib-box{background:#fff;color:#0d1f3c;font-family:"Crimson Pro",Georgia,serif;font-size:1.2rem;font-weight:700;width:36px;height:36px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.setup-ib-label{display:flex;flex-direction:column;}
+.setup-ib-label span:first-child{font-size:.72rem;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:.05em;}
+.setup-ib-label span:last-child{font-size:.62rem;color:rgba(255,255,255,.5);}
+
+.setup-body{width:100%;max-width:560px;padding:32px 20px 40px;display:flex;flex-direction:column;gap:24px;}
+.setup-heading{font-size:1.5rem;font-weight:700;color:#0d1f3c;font-family:"Crimson Pro",Georgia,serif;border-bottom:2px solid #0d1f3c;padding-bottom:10px;}
+.setup-sub{font-size:.85rem;color:#666;margin-top:-16px;}
+
+.setup-card{background:#fff;border-radius:2px;border-top:4px solid #0d1f3c;padding:18px 20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.setup-card label{font-size:.72rem;font-weight:600;color:#0d1f3c;text-transform:uppercase;letter-spacing:.07em;}
+.setup-card select,.setup-card input[type=text],.setup-card input[type=number]{
+  width:100%;padding:10px 12px;border:1.5px solid #c8c3bb;border-radius:2px;
+  font-size:1rem;font-family:"Inter",Arial,sans-serif;color:#1a1a1a;background:#fff;outline:none;
+  transition:border-color .15s;
+}
+.setup-card select:focus,.setup-card input:focus{border-color:#0d1f3c;}
+
+#exam-fields{display:flex;flex-direction:column;gap:14px;}
+.exam-setup-row{background:#fff;border-radius:2px;border-top:4px solid #c8a415;padding:16px 18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.exam-setup-num{font-size:.7rem;font-weight:700;color:#8a6800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;}
+.exam-setup-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:.68rem;font-weight:600;color:#0d1f3c;text-transform:uppercase;letter-spacing:.06em;}
+.field input[type=text],.field input[type=time],.field input[type=number]{
+  padding:9px 11px;border:1.5px solid #c8c3bb;border-radius:2px;
+  font-size:.95rem;font-family:"Inter",Arial,sans-serif;color:#1a1a1a;background:#fff;outline:none;
+  transition:border-color .15s;
+}
+.field input:focus{border-color:#0d1f3c;}
+.extra-check{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.extra-check input[type=checkbox]{width:16px;height:16px;accent-color:#0d1f3c;cursor:pointer;}
+.extra-check span{font-size:.82rem;font-weight:500;color:#0d1f3c;}
+
+/* Name row with copy button */
+.name-row{display:flex;gap:8px;align-items:center;}
+.name-row input{flex:1;}
+.btn-copy-name{background:#f0ede8;border:1.5px solid #c8c3bb;border-radius:2px;padding:9px 12px;font-size:.8rem;font-weight:600;color:#0d1f3c;cursor:pointer;white-space:nowrap;transition:background .15s;}
+.btn-copy-name:hover{background:#e0dbd2;}
+.btn-copy-name.copied{background:#0d1f3c;color:#fff;border-color:#0d1f3c;}
+.btn-paste-name{background:#f0ede8;border:1.5px solid #c8c3bb;border-radius:2px;padding:9px 12px;font-size:.8rem;font-weight:600;color:#0d1f3c;cursor:pointer;white-space:nowrap;transition:background .15s;}
+.btn-paste-name:hover{background:#e0dbd2;}
+.btn-paste-name.pasted{background:#2a7a3a;color:#fff;border-color:#2a7a3a;}
+
+.btn-start{background:#0d1f3c;color:#fff;border:none;border-radius:2px;padding:14px 0;font-size:1rem;font-weight:600;font-family:"Inter",Arial,sans-serif;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;transition:opacity .15s;width:100%;}
+.btn-start:hover{opacity:.88;}
+
+/* Duration hint */
+.duration-hint{font-size:.72rem;color:#888;font-style:italic;margin-top:-4px;}
+
+/* ══ TIMER SCREEN ══ */
+#timer-screen{display:none;flex-direction:column;height:100vh;overflow:hidden;}
+
+/* TOP BAR */
+#top-bar{
+  background:#0d1f3c;padding:0 16px;
+  display:flex;align-items:center;gap:0;height:80px;flex-shrink:0;
+  overflow:hidden;
+}
+.tb-logo{display:flex;align-items:center;padding-right:14px;border-right:1px solid rgba(255,255,255,.15);flex-shrink:0;}
+.tb-logo img{height:44px;mix-blend-mode:screen;}
+.tb-ib{display:flex;align-items:center;gap:8px;padding:0 14px;border-right:1px solid rgba(255,255,255,.15);flex-shrink:0;}
+.tb-ib-box{background:#fff;color:#0d1f3c;font-family:"Crimson Pro",Georgia,serif;font-size:1rem;font-weight:700;width:32px;height:32px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tb-ib-text{display:flex;flex-direction:column;}
+.tb-ib-text .t1{font-size:.65rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em;}
+.tb-ib-text .t2{font-size:.55rem;color:rgba(255,255,255,.6);letter-spacing:.03em;}
+.tb-clock{display:flex;flex-direction:column;align-items:center;padding:0 18px;border-right:1px solid rgba(255,255,255,.15);flex-shrink:0;}
+#dubai-time{font-size:3.4rem;font-weight:700;color:#fff;font-family:"Inter",Arial,sans-serif;letter-spacing:.02em;line-height:1;}
+.tb-clock-sub{font-size:.58rem;color:rgba(255,255,255,.55);letter-spacing:.07em;text-transform:uppercase;margin-top:3px;}
+.tb-spacer{flex:1;min-width:8px;}
+.tb-controls{display:flex;align-items:center;gap:6px;padding-left:14px;border-left:1px solid rgba(255,255,255,.15);flex-shrink:0;}
+.ctrl-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:4px;color:#fff;padding:6px 13px;font-size:.75rem;font-family:"Inter",Arial,sans-serif;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.ctrl-btn:hover{background:rgba(255,255,255,.22);}
+.ctrl-btn.av{background:rgba(255,255,255,.28);border-color:rgba(255,255,255,.6);}
+.ctrl-btn.pause-btn{background:#c8a415;border-color:#b89010;color:#fff;font-weight:600;}
+.ctrl-btn.pause-btn:hover{background:#d4b820;}
+.ctrl-btn.paused{background:#2a7a3a;border-color:#1e6030;}
+.ctrl-btn.edit-btn{background:transparent;border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.6);font-size:.68rem;}
+.ctrl-btn.edit-btn:hover{color:#fff;border-color:rgba(255,255,255,.5);}
+.ctrl-btn.add-exam-btn{background:rgba(200,164,21,.25);border-color:#c8a415;color:#f5d96e;font-size:.72rem;}
+.ctrl-btn.add-exam-btn:hover{background:rgba(200,164,21,.4);}
+
+/* PROGRESS BAR */
+#progress-wrap{height:4px;background:#1e3a6e;flex-shrink:0;}
+#progress-bar{height:4px;background:#c8a415;width:100%;transition:width linear;}
+
+/* SESSION BAR */
+#session-bar{background:#fff;border-bottom:1px solid #ddd8ce;padding:4px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.session-label{font-size:.72rem;font-weight:600;color:#0d1f3c;text-transform:uppercase;letter-spacing:.08em;}
+.session-right{display:flex;align-items:center;gap:10px;}
+.session-dots{display:flex;gap:5px;align-items:center;}
+.slide-dot{width:8px;height:8px;border-radius:50%;background:#ddd8ce;transition:background .3s;}
+.slide-dot.active{background:#0d1f3c;}
+#slide-status{font-size:.72rem;color:#888;font-family:"Inter",Arial,sans-serif;}
+.paused-badge{background:#c8a415;color:#1a1a1a;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.04em;display:none;}
+.paused-badge.on{display:inline-block;}
+
+/* SINGLE EXAM */
+#exam-display{padding:20px 28px;display:flex;flex-direction:column;gap:0;}
+.exam-card{background:#fff;border-radius:2px;border-top:5px solid #0d1f3c;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:22px 28px;display:flex;flex-direction:column;gap:18px;}
+.exam-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.exam-name-block{display:flex;flex-direction:column;gap:5px;}
+.exam-name{font-size:2.4rem;font-weight:700;color:#0d1f3c;font-family:"Crimson Pro",Georgia,serif;line-height:1.1;}
+.exam-sublabel{font-size:.72rem;font-weight:600;color:#0d1f3c;text-transform:uppercase;letter-spacing:.07em;border-left:3px solid #0d1f3c;padding-left:8px;}
+.extra-badge{background:#0d1f3c;color:#fff;font-size:.75rem;font-weight:600;padding:5px 14px;border-radius:2px;letter-spacing:.04em;align-self:flex-start;margin-top:4px;}
+
+.times-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.tcell{border:1.5px solid #ddd8ce;border-radius:2px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;background:#f7f5f0;position:relative;overflow:hidden;}
+.tcell::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:#0d1f3c;}
+.tcell.passed::before{background:#cc0000;}
+.tcell.next-up::before{background:#c8a415;}
+.tcell.passed{background:#fdf5f5;border-color:#f0c0c0;}
+.tcell.next-up{background:#fdf9ec;border-color:#e8d898;animation:ibpulse 1.2s infinite alternate;}
+@keyframes ibpulse{from{border-color:#e8d898;}to{border-color:#c8a415;}}
+.tcell-label{font-size:.68rem;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.08em;}
+.tcell-time{font-size:2.5rem;font-weight:700;color:#0d1f3c;line-height:1;}
+.tcell.passed .tcell-time{color:#cc0000;}
+.tcell.passed .tcell-label{color:#cc0000;}
+.tcell.next-up .tcell-time{color:#8a6800;}
+.tcell.next-up .tcell-label{color:#8a6800;}
+
+/* TIME LEFT — the big countdown */
+.time-left-row{display:flex;align-items:stretch;border:2px solid #0d1f3c;border-radius:2px;overflow:hidden;}
+.time-left-row.ending{border-color:#cc0000;}
+.time-left-row.done{border-color:#2a7a3a;}
+.time-left-row.not-started{border-color:#c8a415;}
+.tl-tag{background:#0d1f3c;color:#fff;padding:12px 20px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;white-space:nowrap;}
+.time-left-row.ending .tl-tag{background:#cc0000;}
+.time-left-row.done .tl-tag{background:#2a7a3a;}
+.time-left-row.not-started .tl-tag{background:#c8a415;color:#1a1a1a;}
+.tl-body{flex:1;padding:10px 22px;display:flex;align-items:center;gap:16px;background:#fff;}
+.tl-val{font-size:3.6rem;font-weight:700;color:#0d1f3c;line-height:1;letter-spacing:.03em;}
+.time-left-row.ending .tl-val{color:#cc0000;}
+.time-left-row.done .tl-val{color:#2a7a3a;}
+.time-left-row.not-started .tl-val{color:#8a6800;}
+.tl-hint{font-size:.82rem;color:#888;}
+
+/* OVERVIEW */
+#overview{display:flex;padding:10px 20px 8px;flex-direction:column;gap:8px;flex:1;overflow:hidden;min-height:0;}
+.ov-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:2px solid #0d1f3c;flex-shrink:0;}
+.ov-heading{font-size:.82rem;font-weight:700;color:#0d1f3c;text-transform:uppercase;letter-spacing:.07em;}
+.ov-sub{font-size:.72rem;color:#888;}
+.ov-table-wrap{flex:1;overflow:hidden;min-height:0;}
+.ov-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.ov-table thead tr{background:#0d1f3c;}
+.ov-table th{padding:6px 10px;text-align:center;font-size:.8rem;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:.06em;}
+.ov-table th:first-child{text-align:left;}
+.ov-table th:last-child{font-size:1.05rem;}
+.ov-table tbody tr{border-bottom:1px solid #ddd8ce;background:#fff;}
+.ov-table tbody tr:nth-child(even){background:#f7f5f0;}
+.ov-table tbody tr:hover{background:#eef2f8;}
+.ov-table tbody tr.ov-row-finished{background:#fff0f0!important;border-left:3px solid #cc0000;}
+.ov-table tbody tr.ov-row-finished td{color:#cc0000;}
+.ov-table td{padding:0 10px;text-align:center;font-weight:700;color:#0d1f3c;overflow:hidden;white-space:nowrap;}
+.ov-table td:first-child{text-align:left;font-family:"Crimson Pro",Georgia,serif;overflow:hidden;text-overflow:ellipsis;}
+.ov-table td:last-child{font-size:1.3em;}
+.ov-passed{color:#cc0000;}
+.ov-next{color:#8a6800;background:#fdf9ec;}
+.ov-future{color:#0d1f3c;}
+.ov-extra-pill{font-size:.62rem;font-weight:700;background:#0d1f3c;color:#fff;padding:2px 6px;border-radius:2px;margin-left:7px;letter-spacing:.04em;vertical-align:middle;}
+.btn-delete-exam{background:#cc0000;color:#fff!important;border:none;border-radius:2px;padding:4px 12px;font-size:.72rem;font-weight:700;cursor:pointer;margin-left:8px;vertical-align:middle;letter-spacing:.04em;display:inline-block;}
+.btn-delete-exam:hover{background:#990000;}
+.ov-countdown-chip{font-size:.65rem;color:#cc5500;font-weight:600;margin-left:6px;vertical-align:middle;background:#ffd6d6;padding:2px 7px;border-radius:10px;}
+
+/* Add exam modal */
+#add-exam-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:100;align-items:center;justify-content:center;}
+#add-exam-modal.open{display:flex;}
+.modal-box{background:#fff;border-radius:4px;border-top:5px solid #c8a415;padding:28px 30px;width:420px;max-width:96vw;display:flex;flex-direction:column;gap:18px;box-shadow:0 8px 40px rgba(0,0,0,.25);}
+.modal-title{font-size:1.1rem;font-weight:700;color:#0d1f3c;font-family:"Crimson Pro",Georgia,serif;}
+.modal-field{display:flex;flex-direction:column;gap:6px;}
+.modal-field label{font-size:.68rem;font-weight:600;color:#0d1f3c;text-transform:uppercase;letter-spacing:.06em;}
+.modal-field input{padding:9px 11px;border:1.5px solid #c8c3bb;border-radius:2px;font-size:.95rem;font-family:"Inter",Arial,sans-serif;color:#1a1a1a;background:#fff;outline:none;width:100%;}
+.modal-field input:focus{border-color:#0d1f3c;}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.btn-modal-cancel{background:#f0ede8;border:1.5px solid #c8c3bb;border-radius:2px;padding:9px 18px;font-size:.88rem;font-weight:600;color:#444;cursor:pointer;}
+.btn-modal-add{background:#0d1f3c;border:none;border-radius:2px;padding:9px 18px;font-size:.88rem;font-weight:600;color:#fff;cursor:pointer;}
+
+/* FOOTER */
+#footer{background:#0d1f3c;padding:5px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.footer-text{font-size:.62rem;color:rgba(255,255,255,.38);letter-spacing:.05em;text-transform:uppercase;}
+
+@media print{
+  #setup{display:none!important;}
+  .tb-controls,.ctrl-btn,.edit-btn{display:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     SETUP SCREEN
+════════════════════════════════════ -->
+<div id="setup">
+
+  <div class="setup-body">
+    <div>
+      <div class="setup-heading">Examination Session Setup</div>
+      <p class="setup-sub">Enter the exams for today's session. Times are Dubai local time.</p>
+    </div>
+
+    <div class="setup-card">
+      <label>Number of Exams</label>
+      <select id="exam-count" onchange="buildExamFields()">
+        <option value="1">1 Exam</option>
+        <option value="2">2 Exams</option>
+        <option value="3">3 Exams</option>
+        <option value="4" selected="">4 Exams</option>
+        <option value="5">5 Exams</option>
+        <option value="6">6 Exams</option>
+        <option value="7">7 Exams</option>
+        <option value="8">8 Exams</option>
+        <option value="9">9 Exams</option>
+        <option value="10">10 Exams</option>
+        <option value="11">11 Exams</option>
+        <option value="12">12 Exams</option>
+        <option value="13">13 Exams</option>
+        <option value="14">14 Exams</option>
+        <option value="15">15 Exams</option>
+        <option value="16">16 Exams</option>
+        <option value="17">17 Exams</option>
+        <option value="18">18 Exams</option>
+        <option value="19">19 Exams</option>
+        <option value="20">20 Exams</option>
+      </select>
+    </div>
+
+    <div id="exam-fields"><div class="exam-setup-row"><div class="exam-setup-num">Exam 1</div><div class="exam-setup-fields"><div class="field" style="grid-column:1/-1"><label>Exam Name</label><div class="name-row"><input type="text" id="name0" placeholder="e.g. English A: Language &amp; Literature SL"><button class="btn-copy-name" onclick="copyExamName(0, this)" type="button">📋 Copy</button><button class="btn-paste-name" onclick="pasteExamName(0, this)" type="button">📄 Paste</button></div></div><div class="field"><label>Start Time</label><input type="time" id="start0" value="08:00"></div><div class="field"><label>Duration (minutes)</label><input type="number" id="dur0" value="105" min="1" max="600"></div></div><label class="extra-check"><input type="checkbox" id="extra0"><span>+25% Extra Time (end time &amp; milestones only)</span></label></div><div class="exam-setup-row"><div class="exam-setup-num">Exam 2</div><div class="exam-setup-fields"><div class="field" style="grid-column:1/-1"><label>Exam Name</label><div class="name-row"><input type="text" id="name1" placeholder="e.g. English A: Language &amp; Literature SL"><button class="btn-copy-name" onclick="copyExamName(1, this)" type="button">📋 Copy</button><button class="btn-paste-name" onclick="pasteExamName(1, this)" type="button">📄 Paste</button></div></div><div class="field"><label>Start Time</label><input type="time" id="start1" value="08:00"></div><div class="field"><label>Duration (minutes)</label><input type="number" id="dur1" value="105" min="1" max="600"></div></div><label class="extra-check"><input type="checkbox" id="extra1"><span>+25% Extra Time (end time &amp; milestones only)</span></label></div><div class="exam-setup-row"><div class="exam-setup-num">Exam 3</div><div class="exam-setup-fields"><div class="field" style="grid-column:1/-1"><label>Exam Name</label><div class="name-row"><input type="text" id="name2" placeholder="e.g. English A: Language &amp; Literature SL"><button class="btn-copy-name" onclick="copyExamName(2, this)" type="button">📋 Copy</button><button class="btn-paste-name" onclick="pasteExamName(2, this)" type="button">📄 Paste</button></div></div><div class="field"><label>Start Time</label><input type="time" id="start2" value="08:00"></div><div class="field"><label>Duration (minutes)</label><input type="number" id="dur2" value="105" min="1" max="600"></div></div><label class="extra-check"><input type="checkbox" id="extra2"><span>+25% Extra Time (end time &amp; milestones only)</span></label></div><div class="exam-setup-row"><div class="exam-setup-num">Exam 4</div><div class="exam-setup-fields"><div class="field" style="grid-column:1/-1"><label>Exam Name</label><div class="name-row"><input type="text" id="name3" placeholder="e.g. English A: Language &amp; Literature SL"><button class="btn-copy-name" onclick="copyExamName(3, this)" type="button">📋 Copy</button><button class="btn-paste-name" onclick="pasteExamName(3, this)" type="button">📄 Paste</button></div></div><div class="field"><label>Start Time</label><input type="time" id="start3" value="08:00"></div><div class="field"><label>Duration (minutes)</label><input type="number" id="dur3" value="105" min="1" max="600"></div></div><label class="extra-check"><input type="checkbox" id="extra3"><span>+25% Extra Time (end time &amp; milestones only)</span></label></div></div>
+
+    <button class="btn-start" onclick="startTimer()">Start Examination Timer</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     ADD EXAM MODAL
+════════════════════════════════════ -->
+<div id="add-exam-modal">
+  <div class="modal-box">
+    <div class="modal-title">Add Examination</div>
+    <div class="modal-field">
+      <label>Exam Name</label>
+      <input type="text" id="modal-name" placeholder="e.g. Biology SL Paper 2">
+    </div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label>Start Time</label>
+        <input type="time" id="modal-start" value="09:00">
+      </div>
+      <div class="modal-field">
+        <label>Duration (minutes)</label>
+        <input type="number" id="modal-dur" value="90" min="1" max="600">
+      </div>
+    </div>
+    <div class="modal-field">
+      <label style="display:flex;align-items:center;gap:8px;flex-direction:row;text-transform:none;font-size:.82rem;">
+        <input type="checkbox" id="modal-extra" style="width:16px;height:16px;accent-color:#0d1f3c;">
+        +25% Extra Time
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeAddExamModal()">Cancel</button>
+      <button class="btn-modal-add" onclick="addExamLive()">Add Exam</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     TIMER SCREEN
+════════════════════════════════════ -->
+<div id="timer-screen">
+
+  <div id="top-bar">
+
+    <div class="tb-clock">
+      <div id="dubai-time">00:00:00</div>
+      <div class="tb-clock-sub">Dubai · UAE</div>
+    </div>
+    <div class="tb-spacer"></div>
+    <div class="tb-controls">
+      <button class="ctrl-btn add-exam-btn" onclick="openAddExamModal()">+ Add Exam</button>
+      <button class="ctrl-btn edit-btn" onclick="backToSetup()">✎ Edit</button>
+    </div>
+  </div>
+
+  <div id="overview"></div>
+
+  <div id="footer">
+    <div class="footer-text">IB Examination Timer · Confidential · GEMS World Academy Dubai</div>
+    <div class="footer-text" id="footer-date"></div>
+  </div>
+
+</div>
+
+<script>
+/* ══ STATE ══ */
+var clockTimer=null;
+var exams=[];
+var finishedDeleteTimers={};  /* examId -> setTimeout handle */
+var finishedDeleteTimes={};   /* examId -> timestamp when finished */
+
+/* ══ SETUP ══ */
+function buildExamFields(){
+  var n=parseInt(document.getElementById("exam-count").value);
+  var f=document.getElementById("exam-fields"); f.innerHTML="";
+  for(var i=0;i<n;i++){
+    var div=document.createElement("div"); div.className="exam-setup-row";
+    div.innerHTML=
+      "<div class=\"exam-setup-num\">Exam "+(i+1)+"</div>"+
+      "<div class=\"exam-setup-fields\">"+
+        "<div class=\"field\" style=\"grid-column:1/-1\"><label>Exam Name</label>"+
+        "<div class=\"name-row\"><input type=\"text\" id=\"name"+i+"\" placeholder=\"e.g. English A: Language &amp; Literature SL\"/>"+
+        "<button class=\"btn-copy-name\" onclick=\"copyExamName("+i+", this)\" type=\"button\">&#128203; Copy</button>"+
+        "<button class=\"btn-paste-name\" onclick=\"pasteExamName("+i+", this)\" type=\"button\">&#128196; Paste</button></div></div>"+
+        "<div class=\"field\"><label>Start Time</label><input type=\"time\" id=\"start"+i+"\" value=\"08:00\"/></div>"+
+        "<div class=\"field\"><label>Duration (minutes)</label><input type=\"number\" id=\"dur"+i+"\" value=\"105\" min=\"1\" max=\"600\"/></div>"+
+      "</div>"+
+      "<label class=\"extra-check\"><input type=\"checkbox\" id=\"extra"+i+"\"><span>+25% Extra Time (end time &amp; milestones only)</span></label>";
+    f.appendChild(div);
+  }
+}
+buildExamFields();
+
+function copyExamName(i, btn){
+  var val=document.getElementById("name"+i).value.trim();
+  if(!val){ btn.textContent="(empty)"; setTimeout(function(){btn.innerHTML="&#128203; Copy";},1200); return; }
+  navigator.clipboard.writeText(val).then(function(){
+    btn.textContent="Copied!"; btn.classList.add("copied");
+    setTimeout(function(){btn.innerHTML="&#128203; Copy"; btn.classList.remove("copied");},1500);
+  }).catch(function(){
+    /* Fallback */
+    var ta=document.createElement("textarea"); ta.value=val; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+    btn.textContent="Copied!"; btn.classList.add("copied");
+    setTimeout(function(){btn.innerHTML="&#128203; Copy"; btn.classList.remove("copied");},1500);
+  });
+}
+
+function pasteExamName(i, btn){
+  if(navigator.clipboard && navigator.clipboard.readText){
+    navigator.clipboard.readText().then(function(text){
+      document.getElementById("name"+i).value=text;
+      btn.textContent="Pasted!"; btn.classList.add("pasted");
+      setTimeout(function(){btn.innerHTML="&#128196; Paste"; btn.classList.remove("pasted");},1500);
+    }).catch(function(){
+      /* Clipboard read not permitted — focus the field so user can Ctrl+V */
+      document.getElementById("name"+i).focus();
+      btn.textContent="Press Ctrl+V"; 
+      setTimeout(function(){btn.innerHTML="&#128196; Paste";},2000);
+    });
+  } else {
+    document.getElementById("name"+i).focus();
+    btn.textContent="Press Ctrl+V";
+    setTimeout(function(){btn.innerHTML="&#128196; Paste";},2000);
+  }
+}
+
+function parseT(str){var p=str.split(":");return{h:parseInt(p[0]),m:parseInt(p[1])};}
+function addM(t,mins){var tot=t.h*60+t.m+mins;return{h:Math.floor(tot/60)%24,m:tot%60};}
+
+function buildExam(name, start, durMins, extra, id){
+  if(extra) durMins=Math.round(durMins*1.25);
+  var end=addM(start,durMins);
+  var m30=addM(end,-30);
+  var m5=addM(end,-5);
+  return {id:id||Date.now(), name:name, start:start, end:end, m30:m30, m5:m5, extra:extra};
+}
+
+function startTimer(){
+  var n=parseInt(document.getElementById("exam-count").value);
+  exams=[];
+  for(var i=0;i<n;i++){
+    var name=(document.getElementById("name"+i).value.trim())||("Exam "+(i+1));
+    var start=parseT(document.getElementById("start"+i).value);
+    var durMins=parseInt(document.getElementById("dur"+i).value)||60;
+    var extra=document.getElementById("extra"+i).checked;
+    exams.push(buildExam(name, start, durMins, extra, i));
+  }
+  document.getElementById("setup").style.display="none";
+  document.getElementById("timer-screen").style.display="flex";
+  finishedDeleteTimers={};
+  finishedDeleteTimes={};
+  renderOverview();
+  clockTimer=setInterval(tick,1000);
+  tick();
+}
+
+function backToSetup(){
+  clearInterval(clockTimer);
+  document.getElementById("timer-screen").style.display="none";
+  document.getElementById("setup").style.display="flex";
+}
+
+/* ══ ADD EXAM LIVE ══ */
+function openAddExamModal(){
+  document.getElementById("add-exam-modal").classList.add("open");
+  document.getElementById("modal-name").focus();
+}
+function closeAddExamModal(){
+  document.getElementById("add-exam-modal").classList.remove("open");
+}
+function addExamLive(){
+  var name=document.getElementById("modal-name").value.trim()||("Exam "+(exams.length+1));
+  var start=parseT(document.getElementById("modal-start").value);
+  var dur=parseInt(document.getElementById("modal-dur").value)||60;
+  var extra=document.getElementById("modal-extra").checked;
+  var ex=buildExam(name,start,dur,extra,Date.now());
+  exams.push(ex);
+  closeAddExamModal();
+  renderOverview();
+}
+
+/* ══ DELETE EXAM ══ */
+function deleteExam(id){
+  /* id may come as string from data-attribute or number from state */
+  id=parseInt(id)||id;
+  /* Clear any pending auto-delete */
+  if(finishedDeleteTimers[id]){clearTimeout(finishedDeleteTimers[id]); delete finishedDeleteTimers[id];}
+  delete finishedDeleteTimes[id];
+  var idx=exams.findIndex(function(e){return e.id==id;});
+  if(idx===-1)return;
+  exams.splice(idx,1);
+  if(exams.length===0){backToSetup();return;}
+  renderOverview();
+}
+
+/* ══ TIME HELPERS ══ */
+function getDubaiTime(){return new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Dubai"}));}
+function timePassed(t){var now=getDubaiTime();return(now.getHours()*60+now.getMinutes())>=(t.h*60+t.m);}
+function secsRem(end){
+  var now=getDubaiTime();
+  return end.h*3600+end.m*60-(now.getHours()*3600+now.getMinutes()*60+now.getSeconds());
+}
+function fmtR(s){
+  if(s<=0)return"00:00";
+  var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;
+  if(h>0)return pad(h)+":"+pad(m)+":"+pad(sc);
+  return pad(m)+":"+pad(sc);
+}
+function pad(n){return String(n).padStart(2,"0");}
+function fmt(t){return pad(t.h)+":"+pad(t.m);}
+function getNext(ex){
+  if(!timePassed(ex.start))return"start";
+  if(!timePassed(ex.m30))return"m30";
+  if(!timePassed(ex.m5))return"m5";
+  if(!timePassed(ex.end))return"end";
+  return"done";
+}
+
+/* Check if exam just finished and schedule auto-delete */
+function checkFinishedExams(){
+  var now=Date.now();
+  exams.forEach(function(ex){
+    if(getNext(ex)==="done"){
+      if(!finishedDeleteTimers[ex.id]){
+        /* Record finish time and schedule auto-delete in 3 minutes */
+        finishedDeleteTimes[ex.id]=now;
+        finishedDeleteTimers[ex.id]=setTimeout(function(){
+          deleteExam(ex.id);
+        }, 3*60*1000);
+      }
+    }
+  });
+}
+
+
+/* ══ RENDER OVERVIEW ══ */
+function renderOverview(){
+  var n=exams.length;
+  var ovEl=document.getElementById("overview");
+
+  var h="<div class=\"ov-header\" id=\"ov-hdr\">"+
+    "<div class=\"ov-heading\">All Examinations — Session Overview</div>"+
+  "</div>"+
+  "<div class=\"ov-table-wrap\"><table class=\"ov-table\"><thead><tr id=\"ov-thead-row\">"+
+  "<th>Examination</th><th>Start</th><th>30 Mins Before End</th><th>5 Mins</th><th>End</th>"+
+  "</tr></thead><tbody id=\"ov-tbody\"></tbody></table></div>";
+
+  ovEl.innerHTML=h;
+
+  var hdrH=document.getElementById("ov-hdr").offsetHeight;
+  var theadH=document.getElementById("ov-thead-row").offsetHeight;
+  var totalH=ovEl.offsetHeight;
+  var gapPad=18;
+  var availH=totalH-hdrH-theadH-gapPad;
+  var rowH=Math.max(28, Math.floor(availH/Math.max(n,1)));
+  var fs=Math.min(rowH*0.46, window.innerWidth*0.023, 38);
+  var namefs=Math.min(fs*0.92, window.innerWidth*0.02, 36);
+  var endfs=Math.min(fs*1.35, window.innerWidth*0.028, 52); /* End time bigger */
+
+  var tbody=document.getElementById("ov-tbody");
+  var rows="";
+  /* Sort chronologically so the exam whose 30-min warning comes up next is on top */
+  var sortedExams=exams.slice().sort(function(a,b){
+    return (a.m30.h*60+a.m30.m)-(b.m30.h*60+b.m30.m);
+  });
+  sortedExams.forEach(function(ex){
+    var isFinished=(getNext(ex)==="done");
+    var next=getNext(ex);
+    function cls(k){
+      var t=k==="start"?ex.start:k==="m30"?ex.m30:k==="m5"?ex.m5:ex.end;
+      if(timePassed(t)) return "ov-passed";
+      if(next!=="done"&&next===k) return "ov-next";
+      return "ov-future";
+    }
+    /* Auto-delete countdown label */
+    var delChip="";
+    if(isFinished && finishedDeleteTimes[ex.id]){
+      var elapsed=Math.floor((Date.now()-finishedDeleteTimes[ex.id])/1000);
+      var remaining=Math.max(0, 180-elapsed);
+      var remM=Math.floor(remaining/60), remS=remaining%60;
+      delChip="<span class=\"ov-countdown-chip\">auto-delete in "+remM+":"+pad(remS)+"</span>";
+    }
+    var deleteBtn=isFinished
+      ? "<button class=\"btn-delete-exam\" onclick=\"deleteExam(this.getAttribute('data-id'))\" data-id=\""+ex.id+"\">&#10005; Delete</button>"
+      : "";
+
+    var rowCls=isFinished?"ov-row-finished":"";
+    rows+="<tr class=\""+rowCls+"\" style=\"height:"+rowH+"px\">"+
+      "<td style=\"font-size:"+namefs.toFixed(1)+"px\">"+ex.name+(ex.extra?"<span class=\"ov-extra-pill\">+25%</span>":"")+deleteBtn+delChip+
+      "</td><td class=\""+cls("start")+"\" style=\"font-size:"+fs.toFixed(1)+"px\">"+fmt(ex.start)+
+      "</td><td class=\""+cls("m30")+"\" style=\"font-size:"+fs.toFixed(1)+"px\">"+fmt(ex.m30)+
+      "</td><td class=\""+cls("m5")+"\" style=\"font-size:"+fs.toFixed(1)+"px\">"+fmt(ex.m5)+
+      "</td><td class=\""+cls("end")+"\" style=\"font-size:"+endfs.toFixed(1)+"px;font-weight:900\">"+fmt(ex.end)+"</td></tr>";
+  });
+  tbody.innerHTML=rows;
+}
+
+/* ══ CLOCK TICK ══ */
+function tick(){
+  var now=getDubaiTime();
+  document.getElementById("dubai-time").textContent=
+    pad(now.getHours())+":"+pad(now.getMinutes())+":"+pad(now.getSeconds());
+  var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var fd=document.getElementById("footer-date");
+  if(fd) fd.textContent=days[now.getDay()]+", "+now.getDate()+" "+months[now.getMonth()]+" "+now.getFullYear();
+  checkFinishedExams();
+  renderOverview();
+}
+</script>
+
+</body></html>
