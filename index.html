@@ -323,9 +323,12 @@ var finishedDeleteTimes={};   /* examId -> timestamp when finished */
 /* Build one exam-setup-row as a real DOM element (not a string keyed to a
    numeric index) so rows can be added/removed freely without disturbing
    any other row's data, and without needing to renumber ids. */
+var rowIdCounter=0;
+
 function createExamRow(nameVal, startVal, durVal, extraVal, isExtraDuplicate){
   var row=document.createElement("div");
   row.className="exam-setup-row";
+  row.dataset.rowId="r"+(++rowIdCounter);
   if(isExtraDuplicate) row.dataset.isExtraDuplicate="true";
   row.innerHTML=
     "<div class=\"exam-setup-toprow\">"+
@@ -394,12 +397,20 @@ function syncExamCount(){
   renumberExamRows();
 }
 
-/* Remove a single row (e.g. an unwanted or accidental duplicate) */
+/* Remove a single row (e.g. an unwanted or accidental duplicate).
+   If the removed row is linked to a partner row (either side of an
+   extra-time pair), clear that link so the checkbox can be used again. */
 function removeExamRow(btn){
   var f=document.getElementById("exam-fields");
   var rows=f.querySelectorAll(".exam-setup-row");
   if(rows.length<=1) return; /* always keep at least one row */
   var row=btn.closest(".exam-setup-row");
+
+  if(row.dataset.pairId){
+    var partner=f.querySelector('[data-row-id="'+row.dataset.pairId+'"]');
+    if(partner){ delete partner.dataset.hasExtraPair; delete partner.dataset.pairId; }
+  }
+
   row.remove();
   renumberExamRows();
 }
@@ -417,7 +428,8 @@ function handleExtraToggle(checkbox){
     var durVal=row.querySelector("input[type=number]").value;
     var dupRow=createExamRow(nameVal, startVal, durVal, true, true);
     row.parentNode.insertBefore(dupRow, row.nextSibling);
-    row.dataset.hasExtraPair="true";
+    row.dataset.hasExtraPair=dupRow.dataset.rowId;
+    dupRow.dataset.pairId=row.dataset.rowId;
     checkbox.checked=false; /* original stays standard time */
     var countSel=document.getElementById("exam-count");
     var newCount=Math.min(20, parseInt(countSel.value)+1);
