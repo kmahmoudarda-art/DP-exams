@@ -163,17 +163,18 @@ body{font-family:"Inter",Arial,sans-serif;background:#f7f5f0;color:#1a1a1a;heigh
 .ov-table-wrap{flex:1;overflow:hidden;min-height:0;}
 .ov-table{width:100%;border-collapse:collapse;table-layout:fixed;}
 .ov-table thead tr{background:#0d1f3c;}
-.ov-table th{padding:6px 10px;text-align:center;font-size:.8rem;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:.06em;}
+.ov-table th{padding:10px 14px;text-align:center;font-size:1.35rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em;}
 .ov-table th:first-child{text-align:left;}
-.ov-table th:last-child{font-size:1.05rem;}
+.ov-table th:last-child{font-size:1.6rem;}
 .ov-table tbody tr{border-bottom:1px solid #ddd8ce;background:#fff;}
 .ov-table tbody tr:nth-child(even){background:#f7f5f0;}
 .ov-table tbody tr:hover{background:#eef2f8;}
 .ov-table tbody tr.ov-row-finished{background:#fff0f0!important;border-left:3px solid #cc0000;}
 .ov-table tbody tr.ov-row-finished td{color:#cc0000;}
 .ov-table td{padding:0 10px;text-align:center;font-weight:700;color:#0d1f3c;overflow:hidden;white-space:nowrap;}
-.ov-table td:first-child{text-align:left;font-family:"Crimson Pro",Georgia,serif;overflow:hidden;display:flex;align-items:center;}
-.ov-name-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:0 1 auto;}
+.ov-table td:first-child{text-align:left;font-family:"Crimson Pro",Georgia,serif;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;}
+.ov-name-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;width:100%;}
+.ov-name-extras{display:flex;align-items:center;flex-wrap:wrap;gap:0;}
 .ov-table td:last-child{font-size:1.3em;}
 .ov-passed{color:#cc0000;}
 .ov-next{color:#8a6800;background:#fdf9ec;}
@@ -593,7 +594,9 @@ function renderOverview(){
   var h="<div class=\"ov-header\" id=\"ov-hdr\">"+
     "<div class=\"ov-heading\">All Examinations — Session Overview</div>"+
   "</div>"+
-  "<div class=\"ov-table-wrap\"><table class=\"ov-table\"><thead><tr id=\"ov-thead-row\">"+
+  "<div class=\"ov-table-wrap\"><table class=\"ov-table\">"+
+  "<colgroup><col style=\"width:34%\"><col style=\"width:15%\"><col style=\"width:20%\"><col style=\"width:14%\"><col style=\"width:17%\"></colgroup>"+
+  "<thead><tr id=\"ov-thead-row\">"+
   "<th>Examination</th><th>Start</th><th>30 Mins Before End</th><th>5 Mins</th><th>End</th>"+
   "</tr></thead><tbody id=\"ov-tbody\"></tbody></table></div>";
 
@@ -636,9 +639,10 @@ function renderOverview(){
       ? "<button class=\"btn-delete-exam\" onclick=\"deleteExam(this.getAttribute('data-id'))\" data-id=\""+ex.id+"\">&#10005; Delete</button>"
       : "";
 
+    var extras=(ex.extra?"<span class=\"ov-extra-pill\">+25%</span>":"")+deleteBtn+delChip;
     var rowCls=isFinished?"ov-row-finished":"";
     rows+="<tr class=\""+rowCls+"\" style=\"height:"+rowH+"px\">"+
-      "<td style=\"font-size:"+namefs.toFixed(1)+"px\">"+"<span class=\"ov-name-text\">"+ex.name+"</span>"+(ex.extra?"<span class=\"ov-extra-pill\">+25%</span>":"")+deleteBtn+delChip+
+      "<td style=\"font-size:"+namefs.toFixed(1)+"px\">"+"<span class=\"ov-name-text\">"+ex.name+"</span>"+(extras?"<span class=\"ov-name-extras\">"+extras+"</span>":"")+
       "</td><td class=\""+cls("start")+"\" style=\"font-size:"+fs.toFixed(1)+"px\">"+fmt(ex.start)+
       "</td><td class=\""+cls("m30")+"\" style=\"font-size:"+fs.toFixed(1)+"px\">"+fmt(ex.m30)+
       "</td><td class=\""+cls("m5")+"\" style=\"font-size:"+fs.toFixed(1)+"px\">"+fmt(ex.m5)+
